@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: init
+      validCheckSum: ANY      # <— Ловит любой чек-сумм и позволяет changeSet’у выполняться повторно
       changes:
         # 1. Таблица ships
         - createTable:
@@ -21,12 +22,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: scheduled_arrival_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: scheduled_departure_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
@@ -102,12 +103,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: scheduled_arrival_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: scheduled_departure_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:

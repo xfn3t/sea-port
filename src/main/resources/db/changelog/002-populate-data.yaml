@@ -3,6 +3,7 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: init
+      validCheckSum: ANY      # <— Ловит любой чек-сумм и позволяет changeSet’у выполняться повторно
       changes:
 
         # 1) STORAGE_TYPES: задаём id вручную
