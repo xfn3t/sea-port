@@ -1,0 +1,10 @@
+databaseChangeLog:
+
+  # создаются все таблицы
+  - include:
+      file: db/changelog/001-create-tables.yaml
+      relativeToChangelogFile: false
+  # заполняем таблицы
+  - include:
+      file: db/changelog/002-populate-data.yaml
+      relativeToChangelogFile: false
