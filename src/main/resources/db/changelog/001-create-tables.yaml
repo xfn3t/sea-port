@@ -1,0 +1,185 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: init
+      validCheckSum: ANY      # <— Ловит любой чек-сумм и позволяет changeSet’у выполняться повторно
+      changes:
+        # 1. Таблица ships
+        - createTable:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ship_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_arrival_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_departure_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_length
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: container_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: |
+              ALTER TABLE ships
+              ADD CONSTRAINT chk_ships_length
+              CHECK (ship_length IN (150,200,250));
+
+        # 2. Таблица storage_types
+        - createTable:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: storage_type_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+        # 3. Таблица departure_types
+        - createTable:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: departure_type_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+        # 4. Таблица containers + FK
+        - createTable:
+            tableName: containers
+            columns:
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: damage_status
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: storage_type_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_arrival_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_departure_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_type_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_storage_type
+            baseTableName: containers
+            baseColumnNames: storage_type_id
+            referencedTableName: storage_types
+            referencedColumnNames: storage_type_id
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_departure_type
+            baseTableName: containers
+            baseColumnNames: departure_type_id
+            referencedTableName: departure_types
+            referencedColumnNames: departure_type_id
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_ships
+            baseTableName: containers
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id
+
+        # 5. Таблица fixed_supplies + FK
+        - createTable:
+            tableName: fixed_supplies
+            columns:
+              - column:
+                  name: supply_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_ship_arrival
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_ship_departure
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_container_arrival
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_container_departure
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_fixed_supplies_ships
+            baseTableName: fixed_supplies
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id

@@ -1,0 +1,159 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 2
+      author: init
+      validCheckSum: ANY      # <— Ловит любой чек-сумм и позволяет changeSet’у выполняться повторно
+      changes:
+
+        # 1) STORAGE_TYPES: задаём id вручную
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1
+              - column:
+                  name: storage_type_name
+                  value: 'без охлаждения'
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 2
+              - column:
+                  name: storage_type_name
+                  value: 'с охлаждением'
+
+        # 2) DEPARTURE_TYPES: тоже задаём id
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 1
+              - column:
+                  name: departure_type_name
+                  value: 'судно'
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 2
+              - column:
+                  name: departure_type_name
+                  value: 'авто'
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 3
+              - column:
+                  name: departure_type_name
+                  value: 'жд'
+
+        # 3) SHIPS — без id
+        - insert:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_number
+                  value: "MV-А001"
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-12"
+              - column:
+                  name: ship_length
+                  valueNumeric: 200
+              - column:
+                  name: container_count
+                  valueNumeric: 500
+        - insert:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_number
+                  value: "SS-Blue"
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-15"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-18"
+              - column:
+                  name: ship_length
+                  valueNumeric: 250
+              - column:
+                  name: container_count
+                  valueNumeric: 320
+
+        # 4) CONTAINERS — теперь храните ссылки на реальные id=1,2
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: false
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1    # 'без охлаждения'
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-11"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 1    # 'судно'
+              - column:
+                  name: ship_id
+                  valueNumeric: 1
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: true
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 2    # 'с охлаждением'
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-12"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 2    # 'авто'
+              - column:
+                  name: ship_id
+                  valueNumeric: 1
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: false
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1    # можно также использовать 1 или 2
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-15"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-17"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 3    # 'жд'
+              - column:
+                  name: ship_id
+                  valueNumeric: 2
