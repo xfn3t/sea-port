@@ -1,0 +1,191 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 2
+      author: init
+      validCheckSum: ANY
+
+      changes:
+
+        # 1) STORAGE_TYPES: задаём id вручную
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1
+              - column:
+                  name: storage_type_name
+                  value: 'без охлаждения'
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 2
+              - column:
+                  name: storage_type_name
+                  value: 'с охлаждением'
+
+        # 2) DEPARTURE_TYPES: тоже задаём id
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 1
+              - column:
+                  name: departure_type_name
+                  value: 'судно'
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 2
+              - column:
+                  name: departure_type_name
+                  value: 'авто'
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 3
+              - column:
+                  name: departure_type_name
+                  value: 'жд'
+
+        # 3) SHIPS — используем ship_length_id (предзаполненный справочник)
+        #    length_value=150 → id=1, 200→2, 250→3
+        - insert:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_number
+                  value: "MV-А001"
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-12"
+              - column:
+                  name: ship_length_id
+                  valueNumeric: 2    # длина 200
+              - column:
+                  name: container_count
+                  valueNumeric: 500
+        - insert:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_number
+                  value: "SS-Blue"
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-15"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-18"
+              - column:
+                  name: ship_length_id
+                  valueNumeric: 3    # длина 250
+              - column:
+                  name: container_count
+                  valueNumeric: 320
+
+        # 4) CONTAINERS — ссылки на реальные справочные и ship_id
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: false
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1    # без охлаждения
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-11"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 1    # судно
+              - column:
+                  name: ship_id
+                  valueNumeric: 1    # MV-А001
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: true
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 2    # с охлаждением
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-10"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-12"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 2    # авто
+              - column:
+                  name: ship_id
+                  valueNumeric: 1    # MV-А001
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  valueBoolean: false
+              - column:
+                  name: storage_type_id
+                  valueNumeric: 1    # без охлаждения
+              - column:
+                  name: scheduled_arrival_date
+                  valueDate: "2025-07-15"
+              - column:
+                  name: scheduled_departure_date
+                  valueDate: "2025-07-17"
+              - column:
+                  name: departure_type_id
+                  valueNumeric: 3    # жд
+              - column:
+                  name: ship_id
+                  valueNumeric: 2    # SS-Blue
+
+        # 5) PIERS — создаём по одному пирсу на каждую длину
+        #    max_ship_length_id: 1→150, 2→200, 3→250
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 1    # пирс для длины 150
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 2    # пирс для длины 200
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 3    # пирс для длины 250

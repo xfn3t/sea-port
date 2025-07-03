@@ -1,0 +1,325 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 1. Таблица ships
+        - createTable:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ship_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_arrival_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_departure_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_length
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: container_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: |
+              ALTER TABLE ships
+              ADD CONSTRAINT chk_ships_length
+              CHECK (ship_length IN (150,200,250));
+
+  - changeSet:
+      id: 2
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 2. Таблица storage_types
+        - createTable:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: storage_type_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 3. Таблица departure_types
+        - createTable:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: departure_type_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 4. Таблица piers
+        - createTable:
+            tableName: piers
+            columns:
+              - column:
+                  name: pier_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: occupied
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  remarks: "ID судна, если причал занят; иначе NULL"
+        - addForeignKeyConstraint:
+            constraintName: fk_piers_ships
+            baseTableName: piers
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id
+            onDelete: SET NULL
+
+  - changeSet:
+      id: 5
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 5. Таблица containers + FK
+        - createTable:
+            tableName: containers
+            columns:
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: damage_status
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: storage_type_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_arrival_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scheduled_departure_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_type_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_storage_type
+            baseTableName: containers
+            baseColumnNames: storage_type_id
+            referencedTableName: storage_types
+            referencedColumnNames: storage_type_id
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_departure_type
+            baseTableName: containers
+            baseColumnNames: departure_type_id
+            referencedTableName: departure_types
+            referencedColumnNames: departure_type_id
+        - addForeignKeyConstraint:
+            constraintName: fk_containers_ships
+            baseTableName: containers
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id
+
+  - changeSet:
+      id: 6
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 6. Таблица fixed_supplies + FK
+        - createTable:
+            tableName: fixed_supplies
+            columns:
+              - column:
+                  name: supply_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_ship_arrival
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_ship_departure
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_container_arrival
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_container_departure
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_fixed_supplies_ships
+            baseTableName: fixed_supplies
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id
+
+  - changeSet:
+      id: 7
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 7. Справочная таблица ship_lengths
+        - createTable:
+            tableName: ship_lengths
+            columns:
+              - column:
+                  name: ship_length_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: length_value
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+
+        # предзаполнение возможных длин
+        - insert:
+            tableName: ship_lengths
+            columns:
+              - column:
+                  name: length_value
+                  valueNumeric: 150
+        - insert:
+            tableName: ship_lengths
+            columns:
+              - column:
+                  name: length_value
+                  valueNumeric: 200
+        - insert:
+            tableName: ship_lengths
+            columns:
+              - column:
+                  name: length_value
+                  valueNumeric: 250
+
+        # связываем ships с ship_lengths
+        - addColumn:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_length_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_ships_length_ref
+            baseTableName: ships
+            baseColumnNames: ship_length_id
+            referencedTableName: ship_lengths
+            referencedColumnNames: ship_length_id
+        - update:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_length_id
+                  valueComputed: |
+                    (SELECT sl.ship_length_id
+                       FROM ship_lengths sl
+                      WHERE sl.length_value = ships.ship_length)
+        - dropColumn:
+            tableName: ships
+            columnName: ship_length
+
+        # добавляем максимальную длину для piers
+        - addColumn:
+            tableName: piers
+            columns:
+              - column:
+                  name: max_ship_length_id
+                  type: BIGINT
+                  remarks: "Максимальная длина судна, которую может принять причал"
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_piers_max_length
+            baseTableName: piers
+            baseColumnNames: max_ship_length_id
+            referencedTableName: ship_lengths
+            referencedColumnNames: ship_length_id
