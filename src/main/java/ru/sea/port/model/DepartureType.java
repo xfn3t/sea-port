@@ -1,5 +1,6 @@
 package ru.sea.port.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class DepartureType {
     private String departureTypeName;
 
     @OneToMany(mappedBy = "departureType", cascade = CascadeType.ALL)
+    @JsonManagedReference("departureType-containers")
     private List<Container> containers;
 }

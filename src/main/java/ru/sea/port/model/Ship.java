@@ -1,5 +1,6 @@
 package ru.sea.port.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,15 +30,22 @@ public class Ship {
     @Column(name = "scheduled_departure_date", nullable = false)
     private LocalDateTime scheduledDepartureDate;
 
-    @Column(name = "ship_length", nullable = false)
-    private Integer shipLength;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ship_length_id", foreignKey = @ForeignKey(name = "fk_ships_length_ref"))
+    private ShipLength shipLength;
 
     @Column(name = "container_count", nullable = false)
     private Integer containerCount;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("ship-containers")
     private List<Container> containers;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("ship-fixedSupplies")
     private List<FixedSupply> fixedSupplies;
+
+    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("ship-piers")
+    private List<Pier> piers;
 }

@@ -1,5 +1,6 @@
 package ru.sea.port.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class StorageType {
     @Column(name = "storage_type_name", nullable = false, length = 100)
     private String storageTypeName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "storageType", cascade = CascadeType.ALL)
     private List<Container> containers;
 }
