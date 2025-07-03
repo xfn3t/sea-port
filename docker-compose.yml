@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: seaport
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - sea-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d seaport"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  seaport-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/seaport?connectTimeout=30000
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_PROPERTIES_HIBERNATE_HBM2DDL_AUTO: validate
+      SPRING_LIQUIBASE_ENABLED: "true"
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sea-net
+
+
+volumes:
+  pgdata:
+
+networks:
+  sea-net:
+    driver: bridge
