@@ -43,4 +43,8 @@ public class Container {
     @JoinColumn(name = "ship_id", nullable = false)
     @JsonIgnore
     private Ship ship;
+
+    @OneToOne(mappedBy = "container", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private ContainerActualDate actualDate;
 }

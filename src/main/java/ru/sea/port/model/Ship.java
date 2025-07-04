@@ -39,5 +39,5 @@ public class Ship {
     private List<Container> containers;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FixedSupply> fixedSupplies;
+    private List<ShipActualDate> actualDates;
 }

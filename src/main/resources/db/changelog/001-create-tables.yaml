@@ -140,12 +140,12 @@ databaseChangeLog:
             referencedTableName: ships
             referencedColumnNames: ship_id
 
-        # 5. Таблица fixed_supplies + FK
+        # 5a. Таблица для фактических дат судна (1→N)
         - createTable:
-            tableName: fixed_supplies
+            tableName: ship_actual_dates
             columns:
               - column:
-                  name: supply_id
+                  name: id
                   type: BIGINT
                   autoIncrement: true
                   constraints:
@@ -157,29 +157,37 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: actual_ship_arrival
+                  name: actual_arrival
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
               - column:
-                  name: actual_ship_departure
+                  name: actual_departure
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: actual_container_arrival
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: actual_container_departure
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-
         - addForeignKeyConstraint:
-            constraintName: fk_fixed_supplies_ships
-            baseTableName: fixed_supplies
+            constraintName: fk_ship_actual_dates_ship
+            baseTableName: ship_actual_dates
             baseColumnNames: ship_id
             referencedTableName: ships
             referencedColumnNames: ship_id
+
+        # 5b. Таблица для фактических дат контейнера (1→1)
+        - createTable:
+            tableName: container_actual_dates
+            columns:
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: actual_arrival
+                  type: TIMESTAMP
+              - column:
+                  name: actual_departure
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_container_actual_dates_container
+            baseTableName: container_actual_dates
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
