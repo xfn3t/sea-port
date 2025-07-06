@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ShipActualDateResponse {
     private Long id;
     private Long shipId;
+    private String shipNumber;
     private LocalDateTime actualArrival;
     private LocalDateTime actualDeparture;
 }
