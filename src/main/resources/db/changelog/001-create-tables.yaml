@@ -194,12 +194,12 @@ databaseChangeLog:
       author: init
       validCheckSum: ANY
       changes:
-        # 6. Таблица fixed_supplies + FK
+        # 6. Таблица фактических дат прибытия/отбытия судна
         - createTable:
-            tableName: fixed_supplies
+            tableName: ship_actual_dates
             columns:
               - column:
-                  name: supply_id
+                  name: id
                   type: BIGINT
                   autoIncrement: true
                   constraints:
@@ -211,28 +211,20 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: actual_ship_arrival
+                  name: actual_arrival
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
               - column:
-                  name: actual_ship_departure
+                  name: actual_departure
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
               - column:
                   name: actual_container_arrival
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
               - column:
                   name: actual_container_departure
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
         - addForeignKeyConstraint:
-            constraintName: fk_fixed_supplies_ships
-            baseTableName: fixed_supplies
+            constraintName: fk_ship_actual_dates_ship
+            baseTableName: ship_actual_dates
             baseColumnNames: ship_id
             referencedTableName: ships
             referencedColumnNames: ship_id
@@ -242,7 +234,7 @@ databaseChangeLog:
       author: init
       validCheckSum: ANY
       changes:
-        # 7. Справочная таблица ship_lengths
+        # 7. Справочная таблица ship_lengths и связь с ships и piers
         - createTable:
             tableName: ship_lengths
             columns:
@@ -258,8 +250,6 @@ databaseChangeLog:
                   type: INTEGER
                   constraints:
                     nullable: false
-
-        # предзаполнение возможных длин
         - insert:
             tableName: ship_lengths
             columns:
@@ -278,8 +268,6 @@ databaseChangeLog:
               - column:
                   name: length_value
                   valueNumeric: 250
-
-        # связываем ships с ship_lengths
         - addColumn:
             tableName: ships
             columns:
@@ -301,13 +289,11 @@ databaseChangeLog:
                   name: ship_length_id
                   valueComputed: |
                     (SELECT sl.ship_length_id
-                       FROM ship_lengths sl
-                      WHERE sl.length_value = ships.ship_length)
+                     FROM ship_lengths sl
+                     WHERE sl.length_value = ships.ship_length)
         - dropColumn:
             tableName: ships
             columnName: ship_length
-
-        # добавляем максимальную длину для piers
         - addColumn:
             tableName: piers
             columns:
@@ -323,3 +309,31 @@ databaseChangeLog:
             baseColumnNames: max_ship_length_id
             referencedTableName: ship_lengths
             referencedColumnNames: ship_length_id
+
+  - changeSet:
+      id: 8
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 8. Таблица фактических дат контейнеров
+        - createTable:
+            tableName: container_actual_dates
+            columns:
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: actual_arrival
+                  type: TIMESTAMP
+              - column:
+                  name: actual_departure
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_container_actual_dates_container
+            baseTableName: container_actual_dates
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
