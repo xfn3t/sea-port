@@ -1,5 +1,7 @@
 package ru.sea.port.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StorageType {
 
     @Id
@@ -22,6 +25,7 @@ public class StorageType {
     @Column(name = "storage_type_name", nullable = false, length = 100)
     private String storageTypeName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "storageType", cascade = CascadeType.ALL)
     private List<Container> containers;
 }

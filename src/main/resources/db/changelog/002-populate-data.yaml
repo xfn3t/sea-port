@@ -3,7 +3,8 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: init
-      validCheckSum: ANY      # <— Ловит любой чек-сумм и позволяет changeSet’у выполняться повторно
+      validCheckSum: ANY
+
       changes:
 
         # 1) STORAGE_TYPES: задаём id вручную
@@ -55,7 +56,8 @@ databaseChangeLog:
                   name: departure_type_name
                   value: 'жд'
 
-        # 3) SHIPS — без id
+        # 3) SHIPS — используем ship_length_id (предзаполненный справочник)
+        #    length_value=150 → id=1, 200→2, 250→3
         - insert:
             tableName: ships
             columns:
@@ -69,8 +71,8 @@ databaseChangeLog:
                   name: scheduled_departure_date
                   valueDate: "2025-07-12"
               - column:
-                  name: ship_length
-                  valueNumeric: 200
+                  name: ship_length_id
+                  valueNumeric: 2    # длина 200
               - column:
                   name: container_count
                   valueNumeric: 500
@@ -87,13 +89,13 @@ databaseChangeLog:
                   name: scheduled_departure_date
                   valueDate: "2025-07-18"
               - column:
-                  name: ship_length
-                  valueNumeric: 250
+                  name: ship_length_id
+                  valueNumeric: 3    # длина 250
               - column:
                   name: container_count
                   valueNumeric: 320
 
-        # 4) CONTAINERS — теперь храните ссылки на реальные id=1,2
+        # 4) CONTAINERS — ссылки на реальные справочные и ship_id
         - insert:
             tableName: containers
             columns:
@@ -102,7 +104,7 @@ databaseChangeLog:
                   valueBoolean: false
               - column:
                   name: storage_type_id
-                  valueNumeric: 1    # 'без охлаждения'
+                  valueNumeric: 1    # без охлаждения
               - column:
                   name: scheduled_arrival_date
                   valueDate: "2025-07-10"
@@ -111,10 +113,10 @@ databaseChangeLog:
                   valueDate: "2025-07-11"
               - column:
                   name: departure_type_id
-                  valueNumeric: 1    # 'судно'
+                  valueNumeric: 1    # судно
               - column:
                   name: ship_id
-                  valueNumeric: 1
+                  valueNumeric: 1    # MV-А001
         - insert:
             tableName: containers
             columns:
@@ -123,7 +125,7 @@ databaseChangeLog:
                   valueBoolean: true
               - column:
                   name: storage_type_id
-                  valueNumeric: 2    # 'с охлаждением'
+                  valueNumeric: 2    # с охлаждением
               - column:
                   name: scheduled_arrival_date
                   valueDate: "2025-07-10"
@@ -132,10 +134,10 @@ databaseChangeLog:
                   valueDate: "2025-07-12"
               - column:
                   name: departure_type_id
-                  valueNumeric: 2    # 'авто'
+                  valueNumeric: 2    # авто
               - column:
                   name: ship_id
-                  valueNumeric: 1
+                  valueNumeric: 1    # MV-А001
         - insert:
             tableName: containers
             columns:
@@ -144,7 +146,7 @@ databaseChangeLog:
                   valueBoolean: false
               - column:
                   name: storage_type_id
-                  valueNumeric: 1    # можно также использовать 1 или 2
+                  valueNumeric: 1    # без охлаждения
               - column:
                   name: scheduled_arrival_date
                   valueDate: "2025-07-15"
@@ -153,7 +155,37 @@ databaseChangeLog:
                   valueDate: "2025-07-17"
               - column:
                   name: departure_type_id
-                  valueNumeric: 3    # 'жд'
+                  valueNumeric: 3    # жд
               - column:
                   name: ship_id
-                  valueNumeric: 2
+                  valueNumeric: 2    # SS-Blue
+
+        # 5) PIERS — создаём по одному пирсу на каждую длину
+        #    max_ship_length_id: 1→150, 2→200, 3→250
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 1    # пирс для длины 150
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 2    # пирс для длины 200
+        - insert:
+            tableName: piers
+            columns:
+              - column:
+                  name: occupied
+                  valueBoolean: false
+              - column:
+                  name: max_ship_length_id
+                  valueNumeric: 3    # пирс для длины 250
