@@ -1,5 +1,6 @@
 package ru.sea.port.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/stevedore")
+@RequiredArgsConstructor
 public class ShipController {
 
     private final ShipService shipService;
     private final ShipMapper shipMapper;
-
-    public ShipController(ShipService shipService, ShipMapper shipMapper) {
-        this.shipService = shipService;
-        this.shipMapper = shipMapper;
-    }
 
     /**
      * Возвращает список всех судов в системе.

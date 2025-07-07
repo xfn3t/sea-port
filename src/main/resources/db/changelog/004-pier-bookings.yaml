@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: init
+      validCheckSum: ANY
+      changes:
+        - createTable:
+            tableName: pier_bookings
+            columns:
+              - column:
+                  name: booking_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: pier_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_pier_bookings_piers
+            baseTableName: pier_bookings
+            baseColumnNames: pier_id
+            referencedTableName: piers
+            referencedColumnNames: pier_id
+        - addForeignKeyConstraint:
+            constraintName: fk_pier_bookings_ships
+            baseTableName: pier_bookings
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id

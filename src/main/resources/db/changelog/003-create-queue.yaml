@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: init
+      validCheckSum: ANY
+      changes:
+        - createTable:
+            tableName: ship_queue
+            columns:
+              - column:
+                  name: ship_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_ts
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: ship_queue
+            columnNames: ship_id
+        - addForeignKeyConstraint:
+            constraintName: fk_queue_ships
+            baseTableName: ship_queue
+            baseColumnNames: ship_id
+            referencedTableName: ships
+            referencedColumnNames: ship_id

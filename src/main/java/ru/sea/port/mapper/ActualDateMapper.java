@@ -3,7 +3,8 @@ package ru.sea.port.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import ru.sea.port.dto.*;
+import ru.sea.port.dto.response.ContainerActualDateResponse;
+import ru.sea.port.dto.response.ShipActualDateResponse;
 import ru.sea.port.model.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ActualDateMapper {
             @Mapping(source = "ship.shipId",     target = "shipId"),
             @Mapping(source = "ship.shipNumber", target = "shipNumber")
     })
-    ShipActualDateResponse toShipResponse(ShipActualDate entity);
+	ShipActualDateResponse toShipResponse(ShipActualDate entity);
 
     List<ShipActualDateResponse> toShipResponseList(List<ShipActualDate> entities);
 

@@ -1,10 +1,13 @@
 databaseChangeLog:
-
-  # создаются все таблицы
   - include:
       file: db/changelog/001-create-tables.yaml
       relativeToChangelogFile: false
-  # заполняем таблицы
+#  - include:
+#      file: db/changelog/002-populate-data.yaml
+#      relativeToChangelogFile: false
   - include:
-      file: db/changelog/002-populate-data.yaml
+      file: db/changelog/003-create-queue.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/004-pier-bookings.yaml
       relativeToChangelogFile: false

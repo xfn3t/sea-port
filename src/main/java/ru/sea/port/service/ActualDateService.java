@@ -3,7 +3,10 @@ package ru.sea.port.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sea.port.dto.*;
+import ru.sea.port.dto.request.ContainerArrivalRequest;
+import ru.sea.port.dto.request.ContainerDepartureRequest;
+import ru.sea.port.dto.request.ShipArrivalRequest;
+import ru.sea.port.dto.request.ShipDepartureRequest;
 import ru.sea.port.model.*;
 import ru.sea.port.repository.*;
 

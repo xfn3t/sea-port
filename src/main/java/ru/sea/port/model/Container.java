@@ -1,8 +1,6 @@
 package ru.sea.port.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Container {
 
     @Id
@@ -26,8 +23,9 @@ public class Container {
     @Column(name = "damage_status", nullable = false)
     private Boolean damageStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "storage_type_id", foreignKey = @ForeignKey(name = "fk_containers_storage_type"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storage_type_id", nullable = false)
+    @JsonIgnore
     private StorageType storageType;
 
     @Column(name = "scheduled_arrival_date", nullable = false)
@@ -36,13 +34,17 @@ public class Container {
     @Column(name = "scheduled_departure_date", nullable = false)
     private LocalDateTime scheduledDepartureDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "departure_type_id", foreignKey = @ForeignKey(name = "fk_containers_departure_type"))
-    @JsonBackReference("departureType-containers")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "departure_type_id", nullable = false)
+    @JsonIgnore
     private DepartureType departureType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ship_id", foreignKey = @ForeignKey(name = "fk_containers_ships"))
-    @JsonBackReference("ship-containers")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ship_id", nullable = false)
+    @JsonIgnore
     private Ship ship;
+
+    @OneToOne(mappedBy = "container", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private ContainerActualDate actualDate;
 }
