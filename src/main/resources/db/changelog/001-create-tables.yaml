@@ -196,10 +196,10 @@ databaseChangeLog:
       changes:
         # 6. Таблица fixed_supplies + FK
         - createTable:
-            tableName: fixed_supplies
+            tableName: ship_actual_dates
             columns:
               - column:
-                  name: supply_id
+                  name: id
                   type: BIGINT
                   autoIncrement: true
                   constraints:
@@ -211,12 +211,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: actual_ship_arrival
+                  name: actual_arrival
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
               - column:
-                  name: actual_ship_departure
+                  name: actual_departure
                   type: TIMESTAMP
                   constraints:
                     nullable: false
@@ -231,8 +229,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
-            constraintName: fk_fixed_supplies_ships
-            baseTableName: fixed_supplies
+            constraintName: fk_ship_actual_dates_ship
+            baseTableName: ship_actual_dates
             baseColumnNames: ship_id
             referencedTableName: ships
             referencedColumnNames: ship_id
