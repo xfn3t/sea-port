@@ -45,4 +45,8 @@ public class Container {
     @JoinColumn(name = "ship_id", foreignKey = @ForeignKey(name = "fk_containers_ships"))
     @JsonBackReference("ship-containers")
     private Ship ship;
+
+    @OneToOne(mappedBy = "container", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private ContainerActualDate actualDate;
 }

@@ -44,10 +44,5 @@ public class Ship {
     private List<Container> containers;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("ship-fixedSupplies")
-    private List<FixedSupply> fixedSupplies;
-
-    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("ship-piers")
-    private List<Pier> piers;
+    private List<ShipActualDate> actualDates;
 }
