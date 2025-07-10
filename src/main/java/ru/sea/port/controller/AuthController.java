@@ -63,7 +63,7 @@ public class AuthController {
      * @return HTTP 200 и DTO созданного пользователя {@link UserDto}.
      */
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserDto> register(@RequestBody RegisterRequest req) {
         return ResponseEntity.ok(authService.register(req));
     }
