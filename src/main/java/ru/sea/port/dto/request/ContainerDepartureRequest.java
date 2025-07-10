@@ -1,4 +1,4 @@
-package ru.sea.port.dto;
+package ru.sea.port.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;

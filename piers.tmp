@@ -1,0 +1,1 @@
+[{"pierId":1,"occupied":false,"shipId":null,"shipNumber":null,"maxShipLength":150,"currentShipLength":null},{"pierId":2,"occupied":true,"shipId":1,"shipNumber":"MV-А001","maxShipLength":200,"currentShipLength":200},{"pierId":3,"occupied":true,"shipId":1,"shipNumber":"MV-А001","maxShipLength":250,"currentShipLength":200}]

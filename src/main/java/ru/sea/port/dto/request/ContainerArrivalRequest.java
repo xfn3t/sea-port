@@ -1,4 +1,4 @@
-package ru.sea.port.dto;
+package ru.sea.port.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShipDepartureRequest {
+public class ContainerArrivalRequest {
     @NotNull
-    private Long shipId;
+    private Long containerId;
     @NotNull
-    private LocalDateTime actualShipDeparture;
+    private LocalDateTime actualContainerArrival;
 }

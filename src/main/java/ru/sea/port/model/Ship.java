@@ -1,7 +1,5 @@
 package ru.sea.port.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Ship {
 
     @Id
@@ -32,15 +29,14 @@ public class Ship {
     @Column(name = "scheduled_departure_date", nullable = false)
     private LocalDateTime scheduledDepartureDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ship_length_id", foreignKey = @ForeignKey(name = "fk_ships_length_ref"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ship_length_id", nullable = false)
     private ShipLength shipLength;
 
     @Column(name = "container_count", nullable = false)
     private Integer containerCount;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("ship-containers")
     private List<Container> containers;
 
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipDto {
-
     private String shipNumber;
     private LocalDateTime scheduledArrivalDate;
     private LocalDateTime scheduledDepartureDate;

@@ -123,6 +123,18 @@
             <version>${liquibase-core.version}</version>
         </dependency>
 
+        <!-- Retry & AOP (feature/operator) -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>6.1.5</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -138,7 +150,7 @@
 
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin: includes MapStruct & Lombok processors -->
+            <!-- Maven Compiler Plugin: подключаем Lombok и MapStruct -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

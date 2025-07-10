@@ -1,4 +1,4 @@
-package ru.sea.port.dto;
+package ru.sea.port.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShipActualDateResponse {
-    private Long id;
-    private Long shipId;
-    private String shipNumber;
+public class ContainerActualDateResponse {
+    private Long containerId;
     private LocalDateTime actualArrival;
     private LocalDateTime actualDeparture;
 }

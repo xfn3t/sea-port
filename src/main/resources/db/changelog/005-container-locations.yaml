@@ -1,0 +1,261 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: init
+      validCheckSum: ANY
+      changes:
+        # 1. Таблица для обычного сортировочного цеха
+        - createTable:
+            tableName: sorting_regular
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_sorting_regular_container
+            baseTableName: sorting_regular
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 2. Таблица для рефрижераторного сортировочного цеха
+        - createTable:
+            tableName: sorting_refrigerated
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_sorting_refrigerated_container
+            baseTableName: sorting_refrigerated
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 3. Таблица для обычного склада
+        - createTable:
+            tableName: warehouse_regular
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_warehouse_regular_container
+            baseTableName: warehouse_regular
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 4. Таблица для рефрижераторного склада
+        - createTable:
+            tableName: warehouse_refrigerated
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_warehouse_refrigerated_container
+            baseTableName: warehouse_refrigerated
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 5. Таблица для склада поврежденных контейнеров
+        - createTable:
+            tableName: warehouse_damaged
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_warehouse_damaged_container
+            baseTableName: warehouse_damaged
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 6. Таблица для железнодорожной станции отправки
+        - createTable:
+            tableName: departure_rail
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_departure_rail_container
+            baseTableName: departure_rail
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 7. Таблица для автомобильной станции отправки
+        - createTable:
+            tableName: departure_truck
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_departure_truck_container
+            baseTableName: departure_truck
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
+
+        # 8. Таблица для причала отправки на корабль
+        - createTable:
+            tableName: departure_ship
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: container_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_time
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_departure_ship_container
+            baseTableName: departure_ship
+            baseColumnNames: container_id
+            referencedTableName: containers
+            referencedColumnNames: container_id
+            onDelete: CASCADE
