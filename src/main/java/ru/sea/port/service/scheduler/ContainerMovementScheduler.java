@@ -3,7 +3,7 @@ package ru.sea.port.service.scheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.sea.port.service.ContainerMovementService;
+import ru.sea.port.service.container.ContainerMovementService;
 
 @Component
 @RequiredArgsConstructor

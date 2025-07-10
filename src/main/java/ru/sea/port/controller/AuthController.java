@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import ru.sea.port.dto.*;
-import ru.sea.port.service.AuthService;
+import ru.sea.port.service.user.AuthService;
 
 /**
  * REST-контроллер для аутентификации и регистрации пользователей.
@@ -63,7 +63,7 @@ public class AuthController {
      * @return HTTP 200 и DTO созданного пользователя {@link UserDto}.
      */
     @PostMapping("/register")
-    @PreAuthorize("denyAll()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> register(@RequestBody RegisterRequest req) {
         return ResponseEntity.ok(authService.register(req));
     }

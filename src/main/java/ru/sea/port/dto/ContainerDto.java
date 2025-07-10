@@ -1,8 +1,8 @@
 package ru.sea.port.dto;
 
 import lombok.*;
-import ru.sea.port.model.DepartureType;
-import ru.sea.port.model.StorageType;
+import ru.sea.port.model.container.DepartureType;
+import ru.sea.port.model.container.StorageType;
 import ru.sea.port.model.location.LocationType;
 
 import java.time.LocalDateTime;

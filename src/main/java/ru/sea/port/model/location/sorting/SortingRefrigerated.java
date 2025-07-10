@@ -3,7 +3,7 @@ package ru.sea.port.model.location.sorting;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.sea.port.model.Container;
+import ru.sea.port.model.container.Container;
 import ru.sea.port.model.location.Location;
 import ru.sea.port.model.location.LocationType;
 

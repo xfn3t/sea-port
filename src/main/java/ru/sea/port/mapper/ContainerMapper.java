@@ -3,7 +3,7 @@ package ru.sea.port.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.sea.port.dto.ContainerDto;
-import ru.sea.port.model.*;
+import ru.sea.port.model.container.*;
 import ru.sea.port.model.location.LocationType;
 
 import java.time.LocalDateTime;

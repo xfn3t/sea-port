@@ -3,8 +3,8 @@ package ru.sea.port.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.sea.port.dto.ShipDto;
-import ru.sea.port.model.Ship;
-import ru.sea.port.model.ShipLength;
+import ru.sea.port.model.ship.Ship;
+import ru.sea.port.model.ship.ShipLength;
 
 @Mapper(componentModel = "spring")
 public interface ShipMapper {

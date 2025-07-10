@@ -5,7 +5,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.sea.port.dto.response.ContainerActualDateResponse;
 import ru.sea.port.dto.response.ShipActualDateResponse;
-import ru.sea.port.model.*;
+import ru.sea.port.model.container.ContainerActualDate;
+import ru.sea.port.model.ship.ShipActualDate;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ package ru.sea.port.mapper;
 import org.mapstruct.Mapper;
 
 import ru.sea.port.dto.RoleDto;
-import ru.sea.port.entity.Role;
+import ru.sea.port.model.user.Role;
 
 /**
  * Mapper для преобразования Role ↔ RoleDto.

@@ -2,11 +2,12 @@ package ru.sea.port.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.sea.port.dto.HistoryEntryDTO;
 import ru.sea.port.dto.PierStatusDTO;
 import ru.sea.port.dto.ShipQueueDTO;
-import ru.sea.port.service.PierAssignmentService;
+import ru.sea.port.service.pier.PierAssignmentService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/status")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('TERMINAL_OPERATOR','TALLYMAN')")
 public class StatusController {
 
 	private final PierAssignmentService service;

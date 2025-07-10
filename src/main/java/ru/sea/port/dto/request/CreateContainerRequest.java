@@ -2,8 +2,8 @@ package ru.sea.port.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.sea.port.model.DepartureType;
-import ru.sea.port.model.StorageType;
+import ru.sea.port.model.container.DepartureType;
+import ru.sea.port.model.container.StorageType;
 
 import java.time.LocalDateTime;
 

@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.sea.port.entity.CustomUserDetails;
-import ru.sea.port.entity.User;
-import ru.sea.port.repository.UserRepository;
+import ru.sea.port.model.user.CustomUserDetails;
+import ru.sea.port.model.user.User;
+import ru.sea.port.repository.user.UserRepository;
 
 
 /**

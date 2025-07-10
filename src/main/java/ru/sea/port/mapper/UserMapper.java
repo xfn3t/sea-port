@@ -3,7 +3,7 @@ package ru.sea.port.mapper;
 import org.mapstruct.Mapper;
 
 import ru.sea.port.dto.UserDto;
-import ru.sea.port.entity.User;
+import ru.sea.port.model.user.User;
 
 /**
  * Mapper для преобразования User ↔ UserDto.
