@@ -43,7 +43,7 @@ public class PierAssignmentService {
 			backoff = @Backoff(delay = 200)
 	)
 	@Transactional
-	public void handleArrival(ArrivalRequest req) {
+	public Long handleArrival(ArrivalRequest req) {
 		log.info("handleArrival ➔ {}", req);
 
 		Ship ship;
@@ -82,6 +82,7 @@ public class PierAssignmentService {
 
 		queueRepo.upsertQueue(ship.getShipId(), req.getArrival());
 		processQueue();
+		return ship.getShipId();
 	}
 
 	@Retryable(value = ObjectOptimisticLockingFailureException.class)
@@ -171,10 +172,16 @@ public class PierAssignmentService {
 	}
 
 	private Optional<Pier> findAvailablePierForShip(ShipQueueDTO sq) {
+
+		Ship ship = shipRepo.findByShipId(sq.getShipId())
+				.orElse(null);
+
+		if (ship == null) return Optional.empty();
+
 		return pierRepo.findFreePiers(
 				sq.getShipLength(),
 				sq.getArrivalTs(),
-				shipRepo.findById(sq.getShipId()).get().getScheduledDepartureDate(),
+				ship.getScheduledDepartureDate(),
 				PageRequest.of(0, 1)
 		).stream().findFirst();
 	}

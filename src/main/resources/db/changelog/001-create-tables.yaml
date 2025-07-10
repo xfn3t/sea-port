@@ -5,7 +5,6 @@ databaseChangeLog:
       validCheckSum: ANY
 
       changes:
-
         # 1. Справочник длин судов
         - createTable:
             tableName: ship_lengths
@@ -67,7 +66,7 @@ databaseChangeLog:
             referencedTableName: ship_lengths
             referencedColumnNames: ship_length_id
 
-        # 3. Таблица storage_types
+        # 3. Таблица storage_types (справочник типов хранения)
         - createTable:
             tableName: storage_types
             columns:
@@ -83,8 +82,9 @@ databaseChangeLog:
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
+                    unique: true
 
-        # 4. Таблица departure_types
+        # 4. Таблица departure_types (справочник типов отправления)
         - createTable:
             tableName: departure_types
             columns:
@@ -100,6 +100,7 @@ databaseChangeLog:
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
+                    unique: true
 
         # 5. Таблица containers
         - createTable:
@@ -164,7 +165,7 @@ databaseChangeLog:
             referencedTableName: ships
             referencedColumnNames: ship_id
 
-        # 6. Таблица container_actual_dates (1:1)
+        # 6. Таблица container_actual_dates
         - createTable:
             tableName: container_actual_dates
             columns:
@@ -188,7 +189,7 @@ databaseChangeLog:
             referencedTableName: containers
             referencedColumnNames: container_id
 
-        # 7. Таблица ship_actual_dates (N:1)
+        # 7. Таблица ship_actual_dates
         - createTable:
             tableName: ship_actual_dates
             columns:
@@ -258,3 +259,85 @@ databaseChangeLog:
             baseColumnNames: max_ship_length_id
             referencedTableName: ship_lengths
             referencedColumnNames: ship_length_id
+
+        # 9. Заполняем справочники начальными данными
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_name
+                  value: "REGULAR"
+        - insert:
+            tableName: storage_types
+            columns:
+              - column:
+                  name: storage_type_name
+                  value: "REFRIGERATED"
+
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_name
+                  value: "RAIL"
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_name
+                  value: "TRUCK"
+        - insert:
+            tableName: departure_types
+            columns:
+              - column:
+                  name: departure_type_name
+                  value: "SHIP"
+
+        # 10. Добавляем тестовые данные для демонстрации
+        - insert:
+            tableName: ship_lengths
+            columns:
+              - column:
+                  name: length_value
+                  value: "100"
+
+        - insert:
+            tableName: ships
+            columns:
+              - column:
+                  name: ship_number
+                  value: "SHIP-001"
+              - column:
+                  name: scheduled_arrival_date
+                  value: "2023-10-01 08:00:00"
+              - column:
+                  name: scheduled_departure_date
+                  value: "2023-10-05 18:00:00"
+              - column:
+                  name: ship_length_id
+                  value: "1"
+              - column:
+                  name: container_count
+                  value: "100"
+
+        - insert:
+            tableName: containers
+            columns:
+              - column:
+                  name: damage_status
+                  value: false
+              - column:
+                  name: storage_type_id
+                  value: "1"
+              - column:
+                  name: scheduled_arrival_date
+                  value: "2023-10-01 09:00:00"
+              - column:
+                  name: scheduled_departure_date
+                  value: "2023-10-04 16:00:00"
+              - column:
+                  name: departure_type_id
+                  value: "1"
+              - column:
+                  name: ship_id
+                  value: "1"

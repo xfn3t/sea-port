@@ -3,6 +3,7 @@ package ru.sea.port.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import ru.sea.port.dto.request.ContainerArrivalRequest;
 import ru.sea.port.dto.request.ContainerDepartureRequest;
 import ru.sea.port.dto.request.ShipArrivalRequest;
@@ -20,15 +21,18 @@ public class ActualDateService {
     private final ContainerRepository containerRepo;
     private final ShipActualDateRepository shipEventRepo;
     private final ContainerActualDateRepository containerEventRepo;
+    private final ContainerMovementService movementService;
 
     public ActualDateService(ShipRepository shipRepo,
                              ContainerRepository containerRepo,
                              ShipActualDateRepository shipEventRepo,
-                             ContainerActualDateRepository containerEventRepo) {
+                             ContainerActualDateRepository containerEventRepo,
+                             ContainerMovementService movementService) {
         this.shipRepo = shipRepo;
         this.containerRepo = containerRepo;
         this.shipEventRepo = shipEventRepo;
         this.containerEventRepo = containerEventRepo;
+        this.movementService = movementService;
     }
 
     @Transactional
@@ -53,17 +57,31 @@ public class ActualDateService {
     public ContainerActualDate recordContainerArrival(ContainerArrivalRequest req) {
         Container container = containerRepo.findById(req.getContainerId())
                 .orElseThrow(() -> new EntityNotFoundException("Container not found: " + req.getContainerId()));
-        ContainerActualDate ev = new ContainerActualDate();
-        ev.setContainer(container);
-        ev.setActualArrival(req.getActualContainerArrival());
-        return containerEventRepo.save(ev);
+
+        ContainerActualDate actualDate = new ContainerActualDate();
+        actualDate.setContainer(container);
+        actualDate.setActualArrival(req.getActualContainerArrival());
+        container.setActualDate(actualDate);
+
+        // Автоматическое перемещение в сортировочный цех
+        movementService.moveToSorting(container, req.getActualContainerArrival());
+
+        return containerEventRepo.save(actualDate);
     }
 
     @Transactional
     public ContainerActualDate recordContainerDeparture(ContainerDepartureRequest req) {
         ContainerActualDate ev = containerEventRepo.findByContainerContainerId(req.getContainerId())
-                .orElseThrow(() -> new EntityNotFoundException("No arrival record for container: " + req.getContainerId()));
+                .orElseThrow(() -> new EntityNotFoundException("No arrival record for container"));
+
         ev.setActualDeparture(req.getActualContainerDeparture());
+
+        // Устанавливаем время убытия из текущего местоположения
+        if (ev.getContainer().getCurrentLocation() != null) {
+            ev.getContainer().getCurrentLocation()
+                    .setDepartureTime(req.getActualContainerDeparture());
+        }
+
         return containerEventRepo.save(ev);
     }
 

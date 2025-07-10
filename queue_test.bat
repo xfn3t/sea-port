@@ -1,135 +1,137 @@
 @echo off
-setlocal
+setlocal ENABLEDELAYEDEXPANSION
 
+rem ----------------------------------------
+rem Конфигурация
+rem ----------------------------------------
 set BASE=http://localhost:8080/api
-set DATE=2023-07-10
+set DOCK_DATE=2023-07-10
 
+rem ----------------------------------------
+rem 1) Сброс базы
+rem ----------------------------------------
 echo ===== 1) Reset database =====
 curl -s -X POST %BASE%/admin/reset
 echo.
 
+rem ----------------------------------------
+rem 2) Создание причалов [150,200,250]
+rem ----------------------------------------
 echo ===== 2) Create piers [150,200,250] =====
 curl -s -X POST %BASE%/admin/create-piers -H "Content-Type: application/json" -d "[150,200,250]"
 echo.
 
 echo Calling status after creating piers...
-call :printStatus "After creating piers" "%DATE%T09:00:00"
+call :printStatus "After creating piers" "%DOCK_DATE%T09:00:00"
 
+rem ----------------------------------------
+rem 3) Planned arrivals
+rem ----------------------------------------
 echo ===== 3) Planned arrivals =====
 
-echo [DEBUG] arrival 1: MV-A001
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"MV-A001\",\"shipLength\":200,\"arrival\":\"%DATE%T10:00:00\",\"departure\":\"%DATE%T10:02:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"MV-A001\",\"shipLength\":200,\"arrival\":\"%DOCK_DATE%T10:00:00\",\"departure\":\"%DOCK_DATE%T10:02:00\"}"'
+) do set SHIP1=%%i
+echo [INFO] MV-A001 assigned shipId=!SHIP1!
+call :printStatus "After arrival 1" "%DOCK_DATE%T10:00:00"
 echo.
-echo Calling status after arrival 1...
-call :printStatus "After arrival 1" "%DATE%T10:00:00"
 
-echo [DEBUG] arrival 2: SS-Blue
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"SS-Blue\",\"shipLength\":250,\"arrival\":\"%DATE%T10:00:30\",\"departure\":\"%DATE%T10:03:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"SS-Blue\",\"shipLength\":250,\"arrival\":\"%DOCK_DATE%T10:00:30\",\"departure\":\"%DOCK_DATE%T10:03:00\"}"'
+) do set SHIP2=%%i
+echo [INFO] SS-Blue assigned shipId=!SHIP2!
+call :printStatus "After arrival 2" "%DOCK_DATE%T10:00:30"
 echo.
-echo Calling status after arrival 2...
-call :printStatus "After arrival 2" "%DATE%T10:00:30"
 
-echo [DEBUG] arrival 3: TEST-150-A
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"TEST-150-A\",\"shipLength\":150,\"arrival\":\"%DATE%T10:01:00\",\"departure\":\"%DATE%T10:04:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"TEST-150-A\",\"shipLength\":150,\"arrival\":\"%DOCK_DATE%T10:01:00\",\"departure\":\"%DOCK_DATE%T10:04:00\"}"'
+) do set SHIP3=%%i
+echo [INFO] TEST-150-A assigned shipId=!SHIP3!
+call :printStatus "After arrival 3" "%DOCK_DATE%T10:01:00"
 echo.
-echo Calling status after arrival 3...
-call :printStatus "After arrival 3" "%DATE%T10:01:00"
 
-echo [DEBUG] arrival 4: TEST-200-A
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"TEST-200-A\",\"shipLength\":200,\"arrival\":\"%DATE%T10:01:30\",\"departure\":\"%DATE%T10:05:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"TEST-200-A\",\"shipLength\":200,\"arrival\":\"%DOCK_DATE%T10:01:30\",\"departure\":\"%DOCK_DATE%T10:05:00\"}"'
+) do set SHIP4=%%i
+echo [INFO] TEST-200-A assigned shipId=!SHIP4!
+call :printStatus "After arrival 4" "%DOCK_DATE%T10:01:30"
 echo.
-echo Calling status after arrival 4...
-call :printStatus "After arrival 4" "%DATE%T10:01:30"
 
-echo [DEBUG] arrival 5: QUEUE-SHIP
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"QUEUE-SHIP\",\"shipLength\":150,\"arrival\":\"%DATE%T10:02:00\",\"departure\":\"%DATE%T10:06:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"QUEUE-SHIP\",\"shipLength\":150,\"arrival\":\"%DOCK_DATE%T10:02:00\",\"departure\":\"%DOCK_DATE%T10:06:00\"}"'
+) do set SHIP5=%%i
+echo [INFO] QUEUE-SHIP assigned shipId=!SHIP5!
+call :printStatus "After arrival 5" "%DOCK_DATE%T10:02:00"
 echo.
-echo Calling status after arrival 5...
-call :printStatus "After arrival 5" "%DATE%T10:02:00"
 
-echo [DEBUG] arrival 6: EXTRA-200
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"EXTRA-200\",\"shipLength\":200,\"arrival\":\"%DATE%T10:05:00\",\"departure\":\"%DATE%T10:08:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"EXTRA-200\",\"shipLength\":200,\"arrival\":\"%DOCK_DATE%T10:05:00\",\"departure\":\"%DOCK_DATE%T10:08:00\"}"'
+) do set SHIP6=%%i
+echo [INFO] EXTRA-200 assigned shipId=!SHIP6!
+call :printStatus "After arrival 6" "%DOCK_DATE%T10:05:00"
 echo.
-echo Calling status after arrival 6...
-call :printStatus "After arrival 6" "%DATE%T10:05:00"
 
-echo [DEBUG] arrival 7: EXTRA-250
-curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d ^
-  "{\"shipNumber\":\"EXTRA-250\",\"shipLength\":250,\"arrival\":\"%DATE%T10:05:30\",\"departure\":\"%DATE%T10:09:00\"}"
+for /f "delims=" %%i in (
+  'curl -s -X POST %BASE%/operator/arrival -H "Content-Type: application/json" -d "{\"shipNumber\":\"EXTRA-250\",\"shipLength\":250,\"arrival\":\"%DOCK_DATE%T10:05:30\",\"departure\":\"%DOCK_DATE%T10:09:00\"}"'
+) do set SHIP7=%%i
+echo [INFO] EXTRA-250 assigned shipId=!SHIP7!
+call :printStatus "After arrival 7" "%DOCK_DATE%T10:05:30"
 echo.
-echo Calling status after arrival 7...
-call :printStatus "After arrival 7" "%DATE%T10:05:30"
 
-echo ===== 4) ActualArrival for QUEUE-SHIP (shipId=5) =====
-curl -s -X POST %BASE%/operator/actualArrival -H "Content-Type: application/json" -d ^
-  "{\"shipId\":5,\"actualArrival\":\"%DATE%T10:02:30\"}"
+rem ----------------------------------------
+rem 4) ActualArrival for QUEUE-SHIP
+rem ----------------------------------------
+echo ===== 4) ActualArrival for QUEUE-SHIP =====
+curl -s -X POST %BASE%/operator/actualArrival -H "Content-Type: application/json" -d "{\"shipId\":!SHIP5!,\"actualArrival\":\"%DOCK_DATE%T10:02:30\"}"
 echo.
-echo Calling status after actualArrival 5...
-call :printStatus "After actualArrival 5" "%DATE%T10:02:30"
+call :printStatus "After actualArrival QUEUE-SHIP" "%DOCK_DATE%T10:02:30"
+echo.
 
+rem ----------------------------------------
+rem 5) Departures
+rem ----------------------------------------
 echo ===== 5) Departures =====
 
-echo [DEBUG] departure 1
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":1,\"departure\":\"%DATE%T10:02:00\"}"
+echo [DEBUG] departure 1 (shipId=!SHIP1!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP1!,\"departure\":\"%DOCK_DATE%T10:02:00\"}"
+call :printStatus "After departure 1" "%DOCK_DATE%T10:02:00"
 echo.
-echo Calling status after departure 1...
-call :printStatus "After departure 1" "%DATE%T10:02:00"
 
-echo [DEBUG] departure 2
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":2,\"departure\":\"%DATE%T10:03:00\"}"
+echo [DEBUG] departure 2 (shipId=!SHIP2!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP2!,\"departure\":\"%DOCK_DATE%T10:03:00\"}"
+call :printStatus "After departure 2" "%DOCK_DATE%T10:03:00"
 echo.
-echo Calling status after departure 2...
-call :printStatus "After departure 2" "%DATE%T10:03:00"
 
-echo [DEBUG] departure 3
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":3,\"departure\":\"%DATE%T10:04:00\"}"
+echo [DEBUG] departure 3 (shipId=!SHIP3!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP3!,\"departure\":\"%DOCK_DATE%T10:04:00\"}"
+call :printStatus "After departure 3" "%DOCK_DATE%T10:04:00"
 echo.
-echo Calling status after departure 3...
-call :printStatus "After departure 3" "%DATE%T10:04:00"
 
-echo [DEBUG] departure 4
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":4,\"departure\":\"%DATE%T10:05:00\"}"
+echo [DEBUG] departure 4 (shipId=!SHIP4!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP4!,\"departure\":\"%DOCK_DATE%T10:05:00\"}"
+call :printStatus "After departure 4" "%DOCK_DATE%T10:05:00"
 echo.
-echo Calling status after departure 4...
-call :printStatus "After departure 4" "%DATE%T10:05:00"
 
-echo [DEBUG] departure 5
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":5,\"departure\":\"%DATE%T10:06:00\"}"
+echo [DEBUG] departure 5 (shipId=!SHIP5!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP5!,\"departure\":\"%DOCK_DATE%T10:06:00\"}"
+call :printStatus "After departure 5" "%DOCK_DATE%T10:06:00"
 echo.
-echo Calling status after departure 5...
-call :printStatus "After departure 5" "%DATE%T10:06:00"
 
-echo [DEBUG] departure 6
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":6,\"departure\":\"%DATE%T10:08:00\"}"
+echo [DEBUG] departure 6 (shipId=!SHIP6!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP6!,\"departure\":\"%DOCK_DATE%T10:08:00\"}"
+call :printStatus "After departure 6" "%DOCK_DATE%T10:08:00"
 echo.
-echo Calling status after departure 6...
-call :printStatus "After departure 6" "%DATE%T10:08:00"
 
-echo [DEBUG] departure 7
-curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d ^
-  "{\"shipId\":7,\"departure\":\"%DATE%T10:09:00\"}"
+echo [DEBUG] departure 7 (shipId=!SHIP7!):
+curl -s -X POST %BASE%/operator/departure -H "Content-Type: application/json" -d "{\"shipId\":!SHIP7!,\"departure\":\"%DOCK_DATE%T10:09:00\"}"
+call :printStatus "After departure 7" "%DOCK_DATE%T10:09:00"
 echo.
-echo Calling status after departure 7...
-call :printStatus "After departure 7" "%DATE%T10:09:00"
 
+rem ----------------------------------------
+rem 6) Финальное состояние
+rem ----------------------------------------
 echo ===== 6) Final state =====
-echo Calling final status...
-call :printStatus "Final" "%DATE%T10:10:00"
-
-echo History:
-curl -s -X GET "%BASE%/status/history" | jq .
+call :printStatus "Final" "%DOCK_DATE%T10:10:00"
 echo.
 
 endlocal

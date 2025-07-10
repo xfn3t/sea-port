@@ -16,10 +16,9 @@ public class OperatorController {
 	private final PierAssignmentService service;
 
 	@PostMapping("/arrival")
-	public ResponseEntity<Void> handlePlannedArrival(@RequestBody ArrivalRequest req) {
+	public ResponseEntity<Long> handlePlannedArrival(@RequestBody ArrivalRequest req) {
 		System.out.println("Received planned arrival request: " + req);
-		service.handleArrival(req);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(service.handleArrival(req));
 	}
 
 	@PostMapping("/actualArrival")
